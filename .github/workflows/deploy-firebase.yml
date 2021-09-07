@@ -15,12 +15,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - name: NPM install and build [web]
+      - name: Install and build [web]
         run: |
           npm install
           npm run build
         working-directory: ./web
-      - name: NPM install and build [admin]
+      - name: Install and build [admin]
         run: |
           npm install
           npm run build
