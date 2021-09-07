@@ -1,0 +1,55 @@
+name: Build and Deploy to Firebase
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: NPM install and build [web]
+        run: |
+          npm install
+          npm run build
+        working-directory: ./web
+      - name: NPM install and build [admin]
+        run: |
+          npm install
+          npm run build
+        working-directory: ./admin
+      - name: Copy builds
+        run: |
+          cp -R ./web/build ./public
+          cp -R ./admin/build ./public/admin
+      - name: Archive
+        uses: actions/upload-artifact@v2
+        with:
+          name: NodeBuilds
+          path: public
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: NodeBuilds
+          path: public
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
