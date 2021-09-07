@@ -3,7 +3,7 @@ import './App.css';
 import {Component} from "react";
 
 
-const API_URL = process.env.node_env === 'production' ? '/api' : 'http://pipeline.moonshinevfx.com/api';
+const API_URL = process.env.node_env === 'production' ? `${window.location.protocol}//${window.location.host}/api` : 'https://pipeline.moonshinevfx.com/api';
 
 
 class App extends Component {
@@ -14,7 +14,7 @@ class App extends Component {
         }
     }
 
-    async fetchGuestBook() {
+    fetchGuestBook = async () => {
         const response = await fetch(
             `${API_URL}/sql`
         );
