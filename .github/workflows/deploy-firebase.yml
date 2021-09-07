@@ -27,8 +27,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.folder }}
-          path: build
-        working-directory: ./${{ matrix.folder }}
+          path: ${{ matrix.folder }}/build
 
   deploy:
     name: Deploy
