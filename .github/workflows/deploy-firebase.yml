@@ -8,6 +8,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        folder: ['web', 'admin']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -15,25 +18,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - name: Install and build [web]
+      - name: Install and build
         run: |
           npm install
           npm run build
-        working-directory: ./web
-      - name: Install and build [admin]
-        run: |
-          npm install
-          npm run build
-        working-directory: ./admin
-      - name: Copy builds
-        run: |
-          cp -R ./web/build ./public
-          cp -R ./admin/build ./public/admin
+        working-directory: ./${{ matrix.folder }}
       - name: Archive
         uses: actions/upload-artifact@v2
         with:
-          name: NodeBuilds
-          path: public
+          name: ${{ matrix.folder }}
+          path: build
+        working-directory: ./${{ matrix.folder }}
 
   deploy:
     name: Deploy
@@ -42,11 +37,16 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Download artifact
+      - name: Download web artifact
         uses: actions/download-artifact@v2
         with:
-          name: NodeBuilds
+          name: web
           path: public
+      - name: Download admin artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: admin
+          path: public/admin
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
