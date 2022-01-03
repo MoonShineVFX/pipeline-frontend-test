@@ -1,0 +1,23 @@
+name: Deploy to Cloud Run
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+env:
+  PROJECT_ID: theproject
+  SERVICE_NAME: service_name
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Change SERVICE_NAME if dev
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          echo "$SERVICE_NAME-dev" >> "$SERVICE_NAME"
+      - name: Echo result
+        run: |
+          echo $SERVICE_NAME
