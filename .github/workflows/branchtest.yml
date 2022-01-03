@@ -17,7 +17,7 @@ jobs:
       - name: Change SERVICE_NAME if dev
         if: github.ref == 'refs/heads/dev'
         run: |
-          echo "$SERVICE_NAME-dev" >> "$SERVICE_NAME"
+          echo "$SERVICE_NAME-dev" >> $SERVICE_NAME
       - name: Echo result
         run: |
           echo $SERVICE_NAME
