@@ -18,6 +18,7 @@ jobs:
         if: github.ref == 'refs/heads/dev'
         run: |
           echo "$SERVICE_NAME-dev" >> $SERVICE_NAME
+          echo $SERVICE_NAME
       - name: Echo result
         run: |
           echo $SERVICE_NAME
