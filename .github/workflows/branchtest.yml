@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: theproject
-  SERVICE_NAME: service_name
+  SERVICE_NAME: theservice
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
       - name: Change SERVICE_NAME if dev
         if: github.ref == 'refs/heads/dev'
         run: |
-          echo "$SERVICE_NAME-dev" >> $SERVICE_NAME
+          echo "SERVICE_NAME=$SERVICE_NAME-dev" >> $GITHUB_ENV
           echo $SERVICE_NAME
       - name: Echo result
         run: |
